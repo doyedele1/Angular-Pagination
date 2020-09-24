@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { HttpResponse } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { tap, takeUntil } from 'rxjs/operators';
 import { retry, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,9 @@ import { retry, catchError } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit {
   products = [];
+  destroy$: Observable<any>;
   constructor(private apiService: ApiService) { }
+  
   ngOnInit(){
     this.apiService.sendGetRequest().pipe(takeUntil(this.destroy$)).subscribe((res: HttpResponse<any>)=>{  
       console.log(res);  
